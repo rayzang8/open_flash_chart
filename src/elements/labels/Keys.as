@@ -4,7 +4,7 @@ package elements.labels {
 	import flash.display.Sprite;
 	import flash.text.TextField;
 	import flash.text.TextFormat;
-	import org.flashdevelop.utils.FlashConnect;
+//	import org.flashdevelop.utils.FlashConnect;
 	
 	public class Keys extends Sprite {
 		private var _height:Number = 0;

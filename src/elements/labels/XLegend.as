@@ -1,5 +1,5 @@
 package elements.labels {
-	import org.flashdevelop.utils.FlashConnect;
+//	import org.flashdevelop.utils.FlashConnect;
 	import string.Css;
 	
 	public class XLegend extends BaseLabel {

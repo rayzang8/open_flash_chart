@@ -1,14 +1,14 @@
 package {
-	import org.flashdevelop.utils.FlashConnect;
+//	import org.flashdevelop.utils.FlashConnect;
 	import com.serialization.json.JSON;
 	
 	public class tr {
 		
 		public static function ace( o:Object ):void	{
-			if ( o == null )
-				FlashConnect.trace( 'null' );
-			else
-				FlashConnect.trace( o.toString() );
+//			if ( o == null )
+//				FlashConnect.trace( 'null' );
+//			else
+//				FlashConnect.trace( o.toString() );
 		
 			// var tempError:Error = new Error();
 			// var stackTrace:String = tempError.getStackTrace();
@@ -33,7 +33,7 @@ package {
 					tmp.push( o.toString() );
 			}
 			
-			FlashConnect.trace( tmp.join(', ') );
+//			FlashConnect.trace( tmp.join(', ') );
 		}
 		
 		// this doesn't work cos I don't know how to set 'permit debugging' yet
@@ -72,13 +72,13 @@ package {
 
 			if (str == null)                                          // means we aren't on the Debug player
 			{
-				FlashConnect.trace( "(!debug) " );
+//				FlashConnect.trace( "(!debug) " );
 			}
 			else
 			{
 				var stacks:Array = str.split("\n");                     // split into each line
 				var caller:String = tr.gimme_caller(stacks[snum]);   // get the caller for just one specific line in the stack trace
-				FlashConnect.trace( caller );
+//				FlashConnect.trace( caller );
 			}
 		}
 
