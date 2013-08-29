@@ -15,13 +15,19 @@
 			
 			this.graphics.lineStyle( 0, 0, 0 );
 			this.graphics.beginFill( colour, 1 );
-			this.graphics.drawCircle( 0, 0, style.get('dot-size') );
+			this.graphics.drawCircle( 0, 0, 5 );
+			this.graphics.endFill();
+
+			this.graphics.beginFill( 0xFFFFFF, 1 );
+			this.graphics.drawCircle( 0, 0, 3 );
 			this.graphics.endFill();
 			
 			var s:Sprite = new Sprite();
 			s.graphics.lineStyle( 0, 0, 0 );
 			s.graphics.beginFill( 0, 1 );
-			s.graphics.drawCircle( 0, 0, style.get('dot-size')+style.get('halo-size') );
+//			trace(style.get('dot-size')+style.get('halo-size'));
+//			s.graphics.drawCircle( 0, 0, style.get('dot-size')+style.get('halo-size') );
+//			s.graphics.drawCircle( 0, 0, 4 );
 			s.blendMode = BlendMode.ERASE;
 			
 			this.line_mask = s;

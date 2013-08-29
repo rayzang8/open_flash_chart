@@ -95,7 +95,7 @@ package  {
 			{
 				// no data found -- debug mode?
 				try {
-					var file:String = "./data-files/pie-1.txt";
+					var file:String = "./data-files/scatter-line-area.txt";
 					this.load_external_file( file );
 
 					/*
@@ -600,13 +600,11 @@ package  {
 			//
 			this.addEventListener(MouseEvent.MOUSE_MOVE, this.mouseMove);
 	
-			// FlashConnect.trace("stageWidth: " + stage.stageWidth + " stageHeight: " + stage.stageHeight);
+			trace("stageWidth: " + stage.stageWidth + " stageHeight: " + stage.stageHeight);
 			this.background.resize();
 			this.title.resize();
-			
 			var left:Number   = this.y_legend.get_width() /*+ this.y_labels.get_width()*/ + this.y_axis.get_width();
-			
-			this.keys.resize( left, this.title.get_height() );
+			this.keys.resize( stage.stageWidth / 2, this.title.get_height() );
 				
 			var top:Number = this.title.get_height() + this.keys.get_height();
 			

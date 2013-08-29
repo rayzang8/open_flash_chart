@@ -1,6 +1,7 @@
 package elements.labels {
 	import charts.Base;
 	import charts.ObjectCollection;
+	
 	import flash.display.Sprite;
 	import flash.text.TextField;
 	import flash.text.TextFormat;
@@ -73,9 +74,17 @@ package elements.labels {
 			var x:Number = 0;
 			var y:Number = 0;
 			
+			var totalWidth:Number = 0;
+			for( var i:Number=0; i<this.numChildren; i++ )
+			{
+				totalWidth += this.getChildAt(i).width + 12 + 10;
+			}
+			
+			this.x -= totalWidth /2;
+			
 			this.graphics.clear();
 			
-			for( var i:Number=0; i<this.numChildren; i++ )
+			for( i=0; i<this.numChildren; i++ )
 			{
 				var width:Number = this.getChildAt(i).width;
 				
