@@ -1,18 +1,10 @@
 ﻿package charts.series.pies {
 	
 	import charts.series.Element;
-	import charts.Pie;
 	
-	import flash.display.Sprite;
 	import flash.display.GradientType;
 	import flash.geom.Matrix;
 	import flash.geom.Point;
-	import flash.text.TextField;
-	import flash.text.TextFormat;
-	import flash.events.Event;
-	import flash.events.MouseEvent;
-	import caurina.transitions.Tweener;
-	import caurina.transitions.Equations;
 	
 	public class PieSlice extends Element {
 		
@@ -30,6 +22,9 @@
 		private var label:String;
 		private var pieRadius:Number;
 		private var rawToolTip:String;
+		private var hele_pos_rate:Number;
+		private var split_line_outer:Number;
+		private var split_line_inner:Number;
 		
 		public var position_original:flash.geom.Point;
 		public var position_animate_to:flash.geom.Point;
@@ -42,6 +37,22 @@
 			this.angle = value.get('start');
 			this.animate = value.get('animate');
 			this.nolabels = value.get('no-labels');
+			this.hele_pos_rate = value.get('hale-pos-rate');
+			this.split_line_outer = value.get('split-line-outer');
+			this.split_line_inner = value.get('split-line-inner');
+			if(this.split_line_outer == -Infinity) {
+				this.split_line_outer = 0;
+			}
+			if(this.split_line_inner == -Infinity) {
+				this.split_line_inner = 0;
+			}
+			if(this.hele_pos_rate == -Infinity) {
+				this.hele_pos_rate = 0;
+			}
+			if(hele_pos_rate == 0) {
+				this.split_line_outer = 0;
+				this.split_line_inner = 0;
+			}
 			this.value = value.get('value');
 			this.gradientFill = value.get('gradient-fill');
 			
@@ -145,10 +156,15 @@
 //				this.graphics.curveTo(ax, ay, endx, endy);
 //			}
 			
+			if(hele_pos_rate == 0) {
+				this.graphics.moveTo(0,0);
+			} else {
+				this.graphics.moveTo(radius,0);
+			}
 	
 			//when aproaching end of slice, refine angle interval
 			angle = 0.08;
-			a = Math.tan((angle/2)*TO_RADIANS);
+			a = Math.tan((angle * hele_pos_rate)*TO_RADIANS);
 			for ( ; i+angle < slice_angle-1.0; i+=angle) {
 				endx = radius*Math.cos((i+angle)*TO_RADIANS);
 				endy = radius*Math.sin((i+angle)*TO_RADIANS);
@@ -156,29 +172,27 @@
 				ay = endy+radius*a*Math.sin(((i+angle)-90)*TO_RADIANS);
 				this.graphics.curveTo(ax, ay, endx, endy);
 			}
-			i = slice_angle-1.0;
+			i = slice_angle-split_line_outer;
 			endx = radius*Math.cos((i+angle)*TO_RADIANS);
 			endy = radius*Math.sin((i+angle)*TO_RADIANS);
 			ax = endx+radius*a*Math.cos(((i+angle)-90)*TO_RADIANS);
 			ay = endy+radius*a*Math.sin(((i+angle)-90)*TO_RADIANS);
 			this.graphics.curveTo(ax, ay, endx, endy);
 			
-			i -= 0.5;
-			for ( ; i-angle >= 0; i-=angle) {
-				trace(i);
-				endx = radius / 2*Math.cos((i)*TO_RADIANS);
-				endy = radius / 2*Math.sin((i)*TO_RADIANS);
-				ax = endx+radius/ 2 *a*Math.cos(((i)-90)*TO_RADIANS);
-				ay = endy+radius/ 2*a*Math.sin(((i)-90)*TO_RADIANS);
-				this.graphics.curveTo(ax, ay, endx, endy);
+			if(hele_pos_rate > 0) {
+				i -= split_line_inner;
+				for ( ; i-angle >= 0; i-=angle) {
+					endx = radius * hele_pos_rate *Math.cos((i)*TO_RADIANS);
+					endy = radius * hele_pos_rate *Math.sin((i)*TO_RADIANS);
+					ax = endx+radius * hele_pos_rate *a*Math.cos(((i)-90)*TO_RADIANS);
+					ay = endy+radius * hele_pos_rate *a*Math.sin(((i)-90)*TO_RADIANS);
+					this.graphics.curveTo(ax, ay, endx, endy);
+				}
 			}
 			
 			
 			//close slice
 			this.graphics.endFill();
-//			this.graphics.lineStyle( 1, 0xFFFFFF );
-//			this.graphics.moveTo(radius, 0);
-//			this.graphics.lineTo(radius/2, 0);
 			
 			if (!this.nolabels) this.draw_label_line( radius, label_line_length, this.slice_angle );
 			// return;

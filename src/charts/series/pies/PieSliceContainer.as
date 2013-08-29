@@ -1,12 +1,13 @@
 ﻿package charts.series.pies {
 	
-	import charts.series.Element;
-	import flash.events.Event;
-	import caurina.transitions.Tweener;
 	import caurina.transitions.Equations;
-	import flash.geom.Point;
-	//import flash.events.Event;
+	import caurina.transitions.Tweener;
+	
+	import charts.series.Element;
+	
+	import flash.events.Event;
 	import flash.events.MouseEvent;
+	import flash.geom.Point;
 	
 	public class PieSliceContainer extends Element {
 		
@@ -25,6 +26,7 @@
 		private var saveY:Number;
 		private var moveToX:Number;
 		private var moveToY:Number;
+		private var label_pos_rate:Number;
 		
 		private var original_alpha:Number;
 		
@@ -48,6 +50,11 @@
 			this.pieSlice = new PieSlice( index, value );
 			this.addChild( this.pieSlice );
 			var textlabel:String = value.get('label');
+
+			this.label_pos_rate = value.get('label-pos-rate');
+			if(this.label_pos_rate == -Infinity) {
+				this.label_pos_rate = 1.0;
+			}
 			
 			//
 			// we set the alpha of the parent container
@@ -61,7 +68,7 @@
 			this.pieLabel = new PieLabel(
 				{
 					label:			l,
-					colour:			'black',
+					colour:			value.get('label-colour'),
 					'font-size':	value.get('font-size'),
 					'on-click':		value.get('on-click') } )
 			this.addChild( this.pieLabel );
@@ -113,8 +120,8 @@
 				var lblRadius:Number = slice_radius + this.tick_size;
 				var lblAngle:Number = ticAngle * TO_RADIANS;
 
-				this.pieLabel.x = this.pieSlice.x + lblRadius *0.7 * Math.cos(lblAngle);
-				this.pieLabel.y = this.pieSlice.y + lblRadius *0.7 * Math.sin(lblAngle);
+				this.pieLabel.x = this.pieSlice.x + lblRadius * label_pos_rate * Math.cos(lblAngle);
+				this.pieLabel.y = this.pieSlice.y + lblRadius * label_pos_rate * Math.sin(lblAngle);
 
 //				if (this.isRightSide())
 //				{
