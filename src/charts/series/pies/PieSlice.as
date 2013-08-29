@@ -125,8 +125,7 @@
 			else
 				this.graphics.beginFill(this.colour, 1);
 			
-			this.graphics.moveTo(0, 0);
-			this.graphics.lineTo(radius, 0);
+			this.graphics.moveTo(radius , 0);
 			
 			var angle:Number = 4;
 			var a:Number = Math.tan((angle/2)*TO_RADIANS);
@@ -138,47 +137,65 @@
 			var ay:Number;
 				
 			//draw curve segments spaced by angle
-			for ( i = 0; i + angle < this.slice_angle; i += angle) {
-				endx = radius*Math.cos((i+angle)*TO_RADIANS);
-				endy = radius*Math.sin((i+angle)*TO_RADIANS);
-				ax = endx+radius*a*Math.cos(((i+angle)-90)*TO_RADIANS);
-				ay = endy+radius*a*Math.sin(((i+angle)-90)*TO_RADIANS);
-				this.graphics.curveTo(ax, ay, endx, endy);
-			}
+//			for ( i = 0; i + angle < this.slice_angle; i += angle) {
+//				endx = radius*Math.cos((i+angle)*TO_RADIANS);
+//				endy = radius*Math.sin((i+angle)*TO_RADIANS);
+//				ax = endx+radius*a*Math.cos(((i+angle)-90)*TO_RADIANS);
+//				ay = endy+radius*a*Math.sin(((i+angle)-90)*TO_RADIANS);
+//				this.graphics.curveTo(ax, ay, endx, endy);
+//			}
 			
 	
 			//when aproaching end of slice, refine angle interval
 			angle = 0.08;
 			a = Math.tan((angle/2)*TO_RADIANS);
-			
-			for ( ; i+angle < slice_angle; i+=angle) {
+			for ( ; i+angle < slice_angle-1.0; i+=angle) {
 				endx = radius*Math.cos((i+angle)*TO_RADIANS);
 				endy = radius*Math.sin((i+angle)*TO_RADIANS);
 				ax = endx+radius*a*Math.cos(((i+angle)-90)*TO_RADIANS);
 				ay = endy+radius*a*Math.sin(((i+angle)-90)*TO_RADIANS);
 				this.graphics.curveTo(ax, ay, endx, endy);
 			}
-	
+			i = slice_angle-1.0;
+			endx = radius*Math.cos((i+angle)*TO_RADIANS);
+			endy = radius*Math.sin((i+angle)*TO_RADIANS);
+			ax = endx+radius*a*Math.cos(((i+angle)-90)*TO_RADIANS);
+			ay = endy+radius*a*Math.sin(((i+angle)-90)*TO_RADIANS);
+			this.graphics.curveTo(ax, ay, endx, endy);
+			
+			i -= 0.5;
+			for ( ; i-angle >= 0; i-=angle) {
+				trace(i);
+				endx = radius / 2*Math.cos((i)*TO_RADIANS);
+				endy = radius / 2*Math.sin((i)*TO_RADIANS);
+				ax = endx+radius/ 2 *a*Math.cos(((i)-90)*TO_RADIANS);
+				ay = endy+radius/ 2*a*Math.sin(((i)-90)*TO_RADIANS);
+				this.graphics.curveTo(ax, ay, endx, endy);
+			}
+			
+			
 			//close slice
 			this.graphics.endFill();
-			this.graphics.lineTo(0, 0);
+//			this.graphics.lineStyle( 1, 0xFFFFFF );
+//			this.graphics.moveTo(radius, 0);
+//			this.graphics.lineTo(radius/2, 0);
 			
 			if (!this.nolabels) this.draw_label_line( radius, label_line_length, this.slice_angle );
 			// return;
 			
 			
-			if( this.animate )
-			{
-				if ( !this.finished_animating ) {
-					this.finished_animating = true;
-					// have we already rotated this slice?
-					Tweener.addTween(this, { rotation:this.angle, time:1.4, transition:Equations.easeOutCirc, onComplete:this.done_animating } );
-				}
-			}
-			else
-			{
+//			if( this.animate )
+//			{
+//				if ( !this.finished_animating ) {
+//					this.finished_animating = true;
+//					// have we already rotated this slice?
+//					Tweener.addTween(this, { rotation:this.angle, time:1.4, transition:Equations.easeOutCirc, onComplete:this.done_animating } );
+//				}
+//			}
+//			else
+//			{
 				this.done_animating();
-			}
+//			}
 		}
 		
 		private function done_animating():void {

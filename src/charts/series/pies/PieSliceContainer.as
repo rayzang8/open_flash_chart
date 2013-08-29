@@ -58,15 +58,13 @@
 				value.set('label-colour', value.get('colour'));
 			
 			var l:String = value.get('no-labels') ? '' : value.get('label');
-			
 			this.pieLabel = new PieLabel(
 				{
 					label:			l,
-					colour:			value.get('label-colour'),
+					colour:			'black',
 					'font-size':	value.get('font-size'),
 					'on-click':		value.get('on-click') } )
 			this.addChild( this.pieLabel );
-			
 			this.attach_events__(value);
 			this.animating = false;
 		}
@@ -115,23 +113,24 @@
 				var lblRadius:Number = slice_radius + this.tick_size;
 				var lblAngle:Number = ticAngle * TO_RADIANS;
 
-				this.pieLabel.x = this.pieSlice.x + lblRadius * Math.cos(lblAngle);
-				this.pieLabel.y = this.pieSlice.y + lblRadius * Math.sin(lblAngle);
+				this.pieLabel.x = this.pieSlice.x + lblRadius *0.7 * Math.cos(lblAngle);
+				this.pieLabel.y = this.pieSlice.y + lblRadius *0.7 * Math.sin(lblAngle);
 
-				if (this.isRightSide())
-				{
-					this.pieLabel.x += this.tick_extension_size + this.label_margin;
-				}
-				else
-				{
-					//if legend stands to the left side of the pie
-					this.pieLabel.x =
-						this.pieLabel.x -
-						this.pieLabel.width -
-						this.tick_extension_size -
-						this.label_margin -
-						4;
-				}
+//				if (this.isRightSide())
+//				{
+//					this.pieLabel.x += this.tick_extension_size + this.label_margin;
+//				}
+//				else
+//				{
+//					//if legend stands to the left side of the pie
+//					this.pieLabel.x =
+//						this.pieLabel.x -
+//						this.pieLabel.width -
+//						this.tick_extension_size -
+//						this.label_margin -
+//						4;
+//				}
+				this.pieLabel.x -= this.pieLabel.width / 2;
 				this.pieLabel.y -= this.pieLabel.height / 2;
 
 				this.drawTicLines();
@@ -425,21 +424,21 @@
 				
 				// Draw the line from the slice to the label
 				this.graphics.clear();
-				this.graphics.lineStyle( 1, this.pieSlice.get_colour(), 1 );
-				
-				// move to the end of the tic closest to the label
-				this.graphics.moveTo(ticLblX, ticLblY);
-				// draw a line the length of the tic extender
-				if (this.pieSlice.isRightSide())
-				{
-					this.graphics.lineTo(ticLblX - this.tick_extension_size, ticLblY);
-				}
-				else
-				{
-					this.graphics.lineTo(ticLblX + this.tick_extension_size, ticLblY);
-				}
-				// Draw a line from the end of the tic extender to the arc
-				this.graphics.lineTo(ticArcX, ticArcY);
+//				this.graphics.lineStyle( 1, this.pieSlice.get_colour(), 1 );
+//				
+//				// move to the end of the tic closest to the label
+//				this.graphics.moveTo(ticLblX, ticLblY);
+//				// draw a line the length of the tic extender
+//				if (this.pieSlice.isRightSide())
+//				{
+//					this.graphics.lineTo(ticLblX - this.tick_extension_size, ticLblY);
+//				}
+//				else
+//				{
+//					this.graphics.lineTo(ticLblX + this.tick_extension_size, ticLblY);
+//				}
+//				// Draw a line from the end of the tic extender to the arc
+//				this.graphics.lineTo(ticArcX, ticArcY);
 			}
 		}
 
