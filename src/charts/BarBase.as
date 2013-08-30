@@ -29,15 +29,15 @@
 			
 			this.props = new Properties(json, root);
 			
-		/*
+		
 			var on_show_root:Properties = new Properties( {
 				type:		"none",		//"pop-up",
 				cascade:	3,
 				delay:		0
 				});
 			this.on_show = new Properties(json['on-show'], on_show_root);
-		*/
-			this.on_show = this.get_on_show(json['on-show']);
+		
+//			this.on_show = this.get_on_show(json['on-show']);
 
 			this.style = {
 				values:				[],
@@ -52,12 +52,25 @@
 				overlap:			0
 			};
 			
+			object_helper.merge_2( json, this.style );
+			
 			this.colour		= this.props.get_colour('colour');
 			this.key		= this.props.get('text');
 			this.font_size	= this.props.get('font-size');
 
+//			// Minor hack, replace all #key# with this key text:
+//			this.props.set( 'tip', this.props.get('tip').replace('#key#', this.key) );
+			
+			this.key_on_click = this.props.get('key-on-click');
+			this.visibilityID = this.props.get('id');
+
 			// Minor hack, replace all #key# with this key text:
-			this.props.set( 'tip', this.props.get('tip').replace('#key#', this.key) );
+			if (this.style.tip is String) {
+				this.style.tip = this.style.tip.replace('#key#', this.key);
+				this.props.set( 'tip', this.props.get('tip').replace('#key#', this.key) );
+			}
+			if (this.props.get('on-click-text') is String)
+				this.props.set('on-click-text', this.props.get('on-click-text').replace('#key#', this.key));
 			
 			
 			//
@@ -72,16 +85,16 @@
 			this.add_values();
 		}
 		
-		protected function get_on_show(json:Object): Properties {
-			
-			var on_show_root:Properties = new Properties( {
-				type:		"none",		//"pop-up",
-				cascade:	3,
-				delay:		0
-				});
-				
-			return new Properties(json, on_show_root);
-		}
+//		protected function get_on_show(json:Object): Properties {
+//			
+//			var on_show_root:Properties = new Properties( {
+//				type:		"none",		//"pop-up",
+//				cascade:	3,
+//				delay:		0
+//				});
+//				
+//			return new Properties(json, on_show_root);
+//		}
 		
 		
 		//
@@ -128,8 +141,12 @@
 				tip:		this.props.get('tip'),
 				alpha:		this.props.get('alpha'),
 				'on-click':	this.props.get('on-click'),
+				'on-click-text': this.style['on-click-text'],
+				'on-click-window': this.style['on-click-window'],
 				axis:		this.props.get('axis'),
-				'on-show':	this.on_show
+				'on-show':	this.on_show,
+				barwidth:   this.style.barwidth,
+				overlap:	this.style.overlap
 			});
 		
 			var s:Properties;

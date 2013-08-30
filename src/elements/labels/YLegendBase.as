@@ -20,15 +20,6 @@
 		public var style:String;
 		private var css:Css;
 		
-//		[Embed(source = "C:\\Windows\\Fonts\\Verdana.ttf", fontFamily = "foo", fontName = '_Verdana')]
-//		private static var EMBEDDED_FONT:String;
-		
-//		[Embed(systemFont='Arial', fontName='spArial', mimeType='application/x-font')]
-//		public static var ArialFont:Class;
-		
-		[Embed(systemFont='Arial', fontName='spArial', mimeType='application/x-font')]
-		public static var ArialFont:Class;
-		
 		public function YLegendBase( json:Object, name:String )
 		{
 
@@ -70,8 +61,9 @@
 		}
 		
 		public function resize():void {
-			if ( this.text == null )
-				return;
+		}
+		
+		public function resize_right( right:Number ):void {
 		}
 		
 		public function get_width(): Number {

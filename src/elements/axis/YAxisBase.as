@@ -7,6 +7,9 @@ package elements.axis {
 		protected var stroke:Number;
 		protected var tick_length:Number;
 		protected var colour:Number;
+		protected var steps:Number;
+
+		
 		protected var grid_colour:Number;
 		
 		public var style:Object;
@@ -14,8 +17,9 @@ package elements.axis {
 		protected var labels:YAxisLabelsBase;
 		private var user_labels:Array;
 		private var user_ticks:Boolean;
+		private var logarithmicScale:Boolean = false;
 		
-		function YAxisBase() {}
+		function YAxisBase(){}
 		
 		public function init(json:Object): void {}
 		
@@ -33,23 +37,14 @@ package elements.axis {
 			this.grid_colour = Utils.get_colour( style['grid-colour'] );
 			this.stroke = style.stroke;
 			this.tick_length = style['tick-length'];
+			this.logarithmicScale = (this.style['log-scale'] == true);
 			
-			tr.aces('YAxisBase auto', this.auto_range( 50001 ));
-			tr.aces('YAxisBase min, max', this.style.min, this.style.max);
-			
-			
-			if ( this.style.max == null ) {
-				// we have labels, so use the number of
-				// labels as Y MAX
-				this.style.max = this.labels.y_max;
-			}
 			// make sure we don't have 1,000,000 steps
 			var min:Number = Math.min(this.style.min, this.style.max);
 			var max:Number = Math.max(this.style.min, this.style.max);
+//			tr.aces(min, max, this.stage.stageHeight, this.style.steps);
 			this.style.steps = this.get_steps(min, max, this.stage.stageHeight);
-			
-			if ( this.labels.i_need_labels )
-				this.labels.make_labels(min, max, this.style.steps);
+	//		tr.aces(min, max, this.stage.stageHeight, this.style.steps);
 			
 			//
 			// colour the grid lines
@@ -92,7 +87,7 @@ package elements.axis {
 			var maxValue:Number = Math.max(max) * 1.07;
 			var l:Number = Math.round(Math.log(maxValue)/Math.log(10));
 			var p:Number = Math.pow(10, l) / 2;
-			maxValue = Math.round((maxValue * 1.1) / p) * p;
+			maxValue = Math.round(maxValue * 1.1 / p) * p;
 			return maxValue;
 			
 			
@@ -159,6 +154,10 @@ package elements.axis {
 			return this.stroke + this.tick_length + this.labels.width;
 		}
 		
+		public function get_log_scale():Boolean {
+			return this.logarithmicScale;
+		}
+		
 		public function die(): void {
 			
 			//this.offset = null;
@@ -181,7 +180,6 @@ package elements.axis {
 			
 			// how many steps (grid lines) do we have?
 			var s:Number = (max - min) / this.style.steps;
-
 			if ( s > (height/2) ) {
 				// either no steps are set, or they are wrong and
 				// we have more grid lines than pixels to show them.
@@ -189,10 +187,14 @@ package elements.axis {
 				//      max = 1,001,000
 				//      min =     1,000
 				//      s   =   200,000
-				return (max - min) / 5;
+				s = (max - min) / 5;
+			}
+			else
+			{
+				s = this.style.steps;
 			}
 			
-			return this.style.steps;
+			return s;
 		}
 		
 		public function resize(label_pos:Number, sc:ScreenCoords):void { }
@@ -234,11 +236,7 @@ package elements.axis {
 			
 			// Axis line:
 			this.graphics.beginFill( this.colour, 1 );
-			this.graphics.drawRect(
-				int(pos),	// <-- pixel align
-				sc.top,
-				this.stroke,
-				sc.height );
+			this.graphics.drawRect( pos, sc.top, this.stroke, sc.height );
 			this.graphics.endFill();
 			
 			// ticks..
@@ -307,11 +305,7 @@ package elements.axis {
 					
 					y = sc.get_y_from_val(i, right);
 					this.graphics.beginFill( this.grid_colour, 1 );
-					this.graphics.drawRect(
-						int(sc.left),
-						int(y),		// <-- make sure they are pixel aligned (2.5 - 3.5 == fuzzy lines)
-						sc.width,
-						1 );
+					this.graphics.drawRect( sc.left, y, sc.width, 1 );
 					this.graphics.endFill();
 				}
 			}

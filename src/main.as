@@ -95,7 +95,7 @@ package  {
 			{
 				// no data found -- debug mode?
 				try {
-					var file:String = "./data-files/hstack-bar-keys.txt";
+					var file:String = "./data-files/bar-2.txt";
 					this.load_external_file( file );
 
 					/*
@@ -525,11 +525,17 @@ package  {
 			
 			this.background.resize();
 			this.title.resize();
+
+			this.keys.resize_top( 0, this.title.get_height() );
+			var right:Number = this.stage.stageWidth - this.keys.get_right_width();
+			var top:Number = this.title.get_height() + this.keys.get_height();
 			
 			// this object is used in the mouseMove method
 			this.sc = new ScreenCoords(
-				this.title.get_height(), 0, this.stage.stageWidth, this.stage.stageHeight,
-				null, null, null, 0, 0, false );
+				top, 0, right, this.stage.stageHeight,
+				null, null, null, 0, 0, false, this.stage.stageWidth);
+
+			this.keys.resize(sc);
 			this.obs.resize( sc );
 			
 			return sc;
@@ -543,7 +549,7 @@ package  {
 			
 			this.background.resize();
 			this.title.resize();
-			this.keys.resize( 0, this.title.get_height() );
+			this.keys.resize_top( 0, this.title.get_height() );
 				
 			var top:Number = this.title.get_height() + this.keys.get_height();
 			
@@ -600,11 +606,14 @@ package  {
 			//
 			this.addEventListener(MouseEvent.MOUSE_MOVE, this.mouseMove);
 	
-			trace("stageWidth: " + stage.stageWidth + " stageHeight: " + stage.stageHeight);
+			// FlashConnect.trace("stageWidth: " + stage.stageWidth + " stageHeight: " + stage.stageHeight);
 			this.background.resize();
 			this.title.resize();
+			
 			var left:Number   = this.y_legend.get_width() /*+ this.y_labels.get_width()*/ + this.y_axis.get_width();
-			this.keys.resize( stage.stageWidth / 2, this.title.get_height() );
+
+			// Must resize "top" keys legend to feed ScreenCoords
+			this.keys.resize_top( left, this.title.get_height() );
 				
 			var top:Number = this.title.get_height() + this.keys.get_height();
 			
@@ -615,6 +624,7 @@ package  {
 			right -= this.y_legend_2.get_width();
 			//right -= this.y_labels_right.get_width();
 			right -= this.y_axis_right.get_width();
+			right -= this.keys.get_right_width();
 
 			// this object is used in the mouseMove method
 			this.sc = new ScreenCoords(
@@ -624,8 +634,11 @@ package  {
 				this.x_axis.get_range(),
 				this.x_axis.first_label_width(),
 				this.x_axis.last_label_width(),
-				false );
-
+false,
+				this.stage.stageWidth,
+				this.y_axis.get_log_scale(),
+				this.y_axis_right.get_log_scale());
+			this.keys.resize(sc);
 			this.sc.set_bar_groups(this.obs.groups);
 				
 			this.x_axis.resize( sc,
@@ -636,14 +649,9 @@ package  {
 			this.y_axis_right.resize( 0, sc );
 			this.x_legend.resize( sc );
 			this.y_legend.resize();
-			this.y_legend_2.resize();
+			this.y_legend_2.resize_right( this.stage.stageWidth - this.keys.get_right_width());
 			
 			this.obs.resize( sc );
-			
-			
-			// Test code:
-			this.dispatchEvent(new Event("on-show"));
-			
 			
 			return sc;
 		}
@@ -805,7 +813,7 @@ package  {
 			//
 			//
 			
-			this.keys = new Keys( this.obs );
+			this.keys = new Keys( this.obs,json.legend );
 			
 			this.addChild( this.x_legend );
 			this.addChild( this.y_legend );

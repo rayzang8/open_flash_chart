@@ -13,6 +13,8 @@
 			// don't let the parent do anything, we just want to
 			// use some of the more useful methods
 			super( { }, 0);
+			this.key_on_click = json['key-on-click'];
+			this.visibilityID = json['id'];
 			
 			// now do all the setup
 			var root:Properties = new Properties( {
@@ -27,9 +29,11 @@
 				'axis':				'left'
 			} );
 			
-			this.props = new Properties(json, root);
+			object_helper.merge_2( json, style );
 			
-			this.on_show = this.get_on_show(json['on-show']);
+//			this.props = new Properties(json, root);
+//			
+//			this.on_show = this.get_on_show(json['on-show']);
 			//
 			// bars are grouped, so 3 bar sets on one chart
 			// will arrange them selves next to each other
@@ -39,6 +43,15 @@
 			this.group = group;
 		
 			this.values = json.values;
+
+			for each( var o:Object in this.style.keys ) {
+				if ( o.colour ) {
+					o.colour = string.Utils.get_colour( o.colour );
+				}
+				if ( o.text == null ) {
+					o.text = "";
+				}
+			}
 
 			this.add_values();
 		}
@@ -50,9 +63,15 @@
 			
 			var tmp:Array = [];
 			
-			for each( var o:Object in this.props.get('keys') ) {
-				if ( o.text && o['font-size'] && o.colour ) {
-					o.colour = string.Utils.get_colour( o.colour );
+			for each( var o:Object in this.style.keys ) {
+				// some lines may not have a key
+				if ( o.text && !isNaN(o.colour) ) {
+					if ( o['font-size'] == null) {
+						o['font-size'] = this.style['font-size'];
+					}
+					o['on-click'] = this.key_on_click;
+					o.series = this;
+					o['visibility-id'] = this.visibilityID;
 					tmp.push( o );
 				}
 			}
@@ -68,17 +87,17 @@
 			//
 			// this is the style for a stack:
 			//
-			var default_style:Properties = new Properties({
-				colours:		this.props.get('colours'),
-				tip:			this.props.get('tip'),
-				alpha:			this.props.get('alpha'),
-				'on-click':		this.props.get('on-click'),
-				axis:			this.props.get('axis'),
-				'on-show':		this.on_show,
-				values:			value
-			});
-
-			return new StackCollection( index, default_style, this.group );
+			var default_style:Object = {
+				tip:		this.style.tip,
+				values:		value,
+				colours:	this.style.colours,
+				alpha:		this.style.alpha,
+				'on-click': this.style['on-click'],
+				'on-click-text': this.style['on-click-text'],
+				'on-click-window': this.style['on-click-window']
+			};
+			
+			return new StackCollection( index, default_style, this.group, this.style.keys );
 		}
 		
 		

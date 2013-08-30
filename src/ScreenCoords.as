@@ -17,6 +17,8 @@ package {
 		private var x_offset:Boolean;
 		private var y_offset:Boolean;
 		private var bar_groups:Number;
+		private var y_log:Boolean = false;
+		private var y_right_log:Boolean = false;
 	
 		
 		public function ScreenCoords( top:Number, left:Number, right:Number, bottom:Number,
@@ -24,23 +26,28 @@ package {
 							y_axis_right_range:Range,
 							x_axis_range:Range,
 							x_left_label_width:Number, x_right_label_width:Number,
-							three_d:Boolean )
+							three_d:Boolean,
+							stage_right:Number,
+							y_axis_logarithmic:Boolean = false,
+							y_axis_right_logarithmic:Boolean = false)
 		{
 			super( top, left, right, bottom );
 			
 			var tmp_left:Number = left;
+			var tmp_right:Number = right;
 			
 			this.x_range = x_axis_range;
 			this.y_range = y_axis_range;
 			this.y_right_range = y_axis_right_range;
+			this.y_log = y_axis_logarithmic;
+			this.y_right_log = y_axis_right_logarithmic;
 			
 			// tr.ace( '-----' );
 			// tr.ace( this.x_range.count() );
 			// tr.ace( this.y_range.count() );
 			
-			
 			if( x_range ) {
-				right = this.jiggle( left, right, x_right_label_width, x_axis_range.count() );
+				tmp_right = this.jiggle( left, right, x_right_label_width, x_axis_range.count(), stage_right );
 				tmp_left = this.shrink_left( left, right, x_left_label_width, x_axis_range.count() );
 			}
 			
@@ -48,7 +55,7 @@ package {
 			this.left = Math.max(left, tmp_left);
 			
 			// round this down to the nearest int:
-			this.right = Math.floor( right );
+			this.right = Math.floor( tmp_right );
 			this.bottom = bottom;
 			this.width = this.right-this.left;
 			this.height = bottom-top;
@@ -121,8 +128,8 @@ package {
 		//    non-scatter type plot because it assumes that the label is centered at
 		//    the max edge of the plot instead of centered on the last "item" 
 		//    (like a bar)
-		public function jiggle( left:Number, right:Number, x_label_width:Number, count:Number ): Number {
-			return right - (x_label_width / 2);
+		public function jiggle( left:Number, right:Number, x_label_width:Number, count:Number, stage_right:Number ): Number {
+			return right + Math.min(0, (stage_right - right - (x_label_width / 2)));
 		}
 		
 		//
@@ -217,21 +224,43 @@ package {
 		//  0 -+--+--+--+--+--+--
 		//
 		public override function get_y_from_val( i:Number, right_axis:Boolean = false ):Number {
-			
 			var r:Range = right_axis ? this.y_right_range : this.y_range;
-			
-			var steps:Number = this.height / r.count();
-			
-			// tr.ace( 'off' );
-			// tr.ace( this.y_offset.offset );
-			// tr.ace( count );
-			
-			var tmp:Number = 0;
-			if( this.y_offset )
-				tmp = (steps / 2);
+			var isLog:Boolean = right_axis ?  this.y_right_log : this.y_log;
+
+			if (!isLog) {
 				
-			// move up (-Y) to our point (don't forget that y_min will shift it down)
-			return this.bottom-tmp-(r.min-i)*steps*-1;
+				var steps:Number = this.height / r.count();
+				
+				// tr.ace( 'off' );
+				// tr.ace( this.y_offset.offset );
+				// tr.ace( count );
+				
+				var tmp:Number = 0;
+				if( this.y_offset )
+					tmp = (steps / 2);
+					
+				// move up (-Y) to our point (don't forget that y_min will shift it down)
+				return this.bottom - tmp - (r.min - i) * steps * -1;
+			}
+			else
+			{
+				if (i == 0) {
+					return this.bottom;
+				}
+				else {
+					// break the height into equal segments for each magnitude
+					var numBlocks:Number = Math.log(r.max) * Math.LOG10E;
+					numBlocks = (Math.floor(numBlocks) == numBlocks) ? numBlocks : numBlocks + 1;
+
+					var blockSize:Number = this.height / numBlocks;
+					
+					var valLog:Number =  Math.log(i) * Math.LOG10E;
+					var fullBlocks:Number = Math.floor(valLog);
+					valLog = valLog - Math.floor(valLog);
+					
+					return this.bottom - (fullBlocks * blockSize) - (valLog * blockSize);
+				}
+			}
 		}
 		
 		public override function get_get_x_from_pos_and_y_from_val( index:Number, y:Number, right_axis:Boolean = false ):flash.geom.Point {
@@ -324,11 +353,11 @@ package {
 		//
 		// index: the n'th bar from the left
 		//
-		public function get_bar_coords( index:Number, group:Number, barWidthPercentage:Number  ):Object {
+		public function get_bar_coords( index:Number, group:Number, barWidthPercentage:Number ):Object {
 			var item_width:Number = this.width_() / this.x_range.count();
 			
 			// the bar(s) have gaps between them:
-			var bar_set_width:Number = item_width*barWidthPercentage;
+			var bar_set_width:Number = item_width * barWidthPercentage;  // 0.8;
 			
 			// get the margin between sets of bars:
 			var tmp:Number = 0;
@@ -345,24 +374,6 @@ package {
 			
 			return { x:left, width:bar_width };
 		}
-		
-//		public function get_horiz_bar_coords( index:Number, group:Number ):Object {
-//			
-//			// split the height into equal heights for each bar
-//			var bar_width:Number = this.height / this.y_range.count();
-//			
-//			// the bar(s) have gaps between them:
-//			var bar_set_width:Number = bar_width*0.8;
-//			
-//			// 1 bar == 100% wide, 2 bars = 50% wide each
-//			var group_width:Number = bar_set_width / this.bar_groups;
-//			
-//			var bar_top:Number = this.top+((bar_width-bar_set_width)/2);
-//			var top:Number = bar_top+(index*bar_width);
-//			top += group_width * group;
-//			
-//			return { y:top, width:group_width };
-//		}
 		
 		public function get_horiz_bar_coords( index:Number, group:Number, barWidthPercentage:Number ):Object {
 			
@@ -382,6 +393,7 @@ package {
 			tr.aces("index", index, "top", top, "width", group_width);
 			return { y:top, width:group_width };
 		}
+		
 		
 		public function makePointHLC( x:Number, high:Number, close:Number, low:Number, right_axis:Boolean, group:Number, group_count:Number )
 		:PointHLC {

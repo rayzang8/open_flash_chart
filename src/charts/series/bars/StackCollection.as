@@ -15,11 +15,9 @@
 		protected var group:Number;
 		private var total:Number;
 		
-		public function StackCollection( index:Number, props:Properties, group:Number ) {
+		public function StackCollection( index:Number, style:Object, group:Number, keys:Array ) {
 			
-			//this.tooltip = this.replace_magic_values( props.get('tip') );
-			this.tooltip = props.get('tip');
-			
+			this.tooltip = style.tip;
 			// this is very similar to a normal
 			// PointBarBase but without the mouse
 			// over and mouse out events
@@ -29,7 +27,7 @@
 			
 			// a stacked bar has n Y values
 			// so this is an array of objects
-			this.vals = props.get('values') as Array;
+			this.vals = style.values as Array;
 			
 			this.total = 0;
 			for each( item in this.vals ) {
@@ -45,7 +43,7 @@
 			// parse our HEX colour strings
 			//
 			this.colours = new Array();
-			for each( var colour:String in props.get('colours') )
+			for each( var colour:String in style.colours )
 				this.colours.push( string.Utils.get_colour( colour ) );
 				
 			this.group = group;
@@ -66,31 +64,78 @@
 				{
 					colr = this.colours[(count % this.colours.length)]
 					
-					// override bottom, colour and total, leave tooltip, on-click, on-show etc..
-					var defaul_stack_props:Properties = new Properties({
-							bottom:		bottom,
-							colour:		colr,		// <-- colour from list (may be overriden later)
-							total:		this.total
-						}, props);
-						
+					var value:Object = {
+						top:		0,		// <-- set this later
+						bottom:		bottom,
+						colour:		colr,		// <-- default colour (may be overriden later)
+						total:		this.total,
+						tip:		this.tooltip,
+						alpha:		style.alpha,
+						'on-click': style['on-click'],
+						'on-click-text': style['on-click-text'],
+						'on-click-window': style['on-click-window']
+					}
+				
 					//
 					// a valid item is one of [ Number, Object, null ]
 					//
-					if ( item is Number ) {
-						item = { val: item };
+					if( item is Number ) {
+						top += item;
+					}
+					else
+					{
+						// MERGE:
+						top += item.val;
+						if( item.colour )
+							value.colour = string.Utils.get_colour(item.colour);
+							
+						if( item.tip )
+							value.tip = item.tip;
+						if (item.text)
+							value.text = item.text;
+						if (item['on-click'])
+							value['on-click'] = item['on-click'];
+						if (item['on-click-text'])
+							value['on-click-text'] = item['on-click-text'];
+						if (item['on-click-window'])
+							value['on-click-window'] = item['on-click-window'];
 					}
 					
-					if ( item == null ) {
-						item = { val: null };
+					value.top = top;
+					
+					var p:Stack = new Stack( index, value, group );
+					
+					// Update the Keys array or the key for the stack
+					var stackKey:String = p.get_key();
+					var stackColour:Number = p.get_colour();
+					if (stackKey == null) {
+						// Check to see if the colour is in the list of keys
+						for each( var o:Object in keys ) {
+							if (o.colour == stackColour) {
+								p.set_key(o.text);
+								p.update_tip_with_key();
+								break;
+							}
+						}
+					}
+					else if (stackKey != "") {
+						// Check to see if the key is already in the list
+						var found:Boolean = false;
+						for each( o in keys ) {
+							if ( o.text == stackKey ) {
+								found = true;
+								break;
+							}
+						}
+						if (!found) {
+							var obj:Object = {
+								text: stackKey,
+								colour: stackColour
+							}
+							keys.push(obj);
+						}
 					}
 					
-					// MERGE:
-					top += item.val;
-					item.top = top;
-					// now override on-click, on-show, colour etc...
-					var stack_props:Properties = new Properties(item, defaul_stack_props);
-					
-					var p:Stack = new Stack( index, stack_props, group );
 					this.addChild( p );
 					
 					bottom = top;
