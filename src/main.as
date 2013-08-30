@@ -95,7 +95,7 @@ package  {
 			{
 				// no data found -- debug mode?
 				try {
-					var file:String = "./data-files/area-line.txt";
+					var file:String = "./data-files/pie-1.txt";
 					this.load_external_file( file );
 
 					/*
@@ -718,9 +718,9 @@ false,
 		
 		private function build_chart( json:Object ):void {
 			
-			tr.ace('----');
-			tr.ace(JSON.serialize(json));
-			tr.ace('----');
+//			tr.ace('----');
+//			tr.ace(JSON.serialize(json));
+//			tr.ace('----');
 			
 			if ( this.obs != null )
 				this.die();
@@ -746,7 +746,7 @@ false,
 				
 				this.obs = Factory.MakeChart( json );
 				this.radar_axis = new RadarAxis( json.radar_axis );
-				this.keys = new Keys( this.obs );
+				this.keys = new Keys( this.obs, json.legend  );
 				
 				this.addChild( this.radar_axis );
 				this.addChild( this.keys );
@@ -758,10 +758,15 @@ false,
 			}
 			else
 			{
+				if (json.legend == null) json.legend = { };
+				if (json.legend.visible == null) json.legend.visible = false;
+				// this is a PIE chart
 				// this is a PIE chart
 				this.obs = Factory.MakeChart( json );
 				// PIE charts default to FOLLOW tooltips
 				this.tooltip.set_tip_style( Tooltip.NORMAL );
+				this.keys = new Keys( this.obs, json.legend );
+				this.addChild( this.keys );
 			}
 
 			// these are added in the Flash Z Axis order
