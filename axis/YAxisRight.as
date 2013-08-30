@@ -6,6 +6,10 @@
 		function YAxisRight() {}
 		
 		public override function init(json:Object): void {
+		
+			this.labels = new YAxisLabelsRight(json);
+			this.addChild( this.labels );
+			
 			//
 			// default values for a right axis (turned off)
 			//
@@ -18,26 +22,20 @@
 				'grid-visible':	false,	// <-- this is off by default for RIGHT axis
 				'3d':			0,
 				steps:			1,
-				visible:		false,
+				visible:		false,	// <-- by default this is invisible
 				min:			0,
 				max:			10
 			};
-			
-			super._init(json, 'y_axis_right', style);
 
 			//
 			// OK, the user has set the right Y axis,
 			// but forgot to specifically set visible to
 			// true, I think we can forgive them:
 			//
-			this.labels = new YAxisLabelsRight( this, json );
-			this.addChild( this.labels );
-
-			if( json.y_axis_right ) {
+			if( json.y_axis_right )
 				style.visible = true;
-				if ( this.labels.i_need_labels )
-					this.labels.make_labels(this.style.min, this.style.max, this.style.steps);
-			}
+
+			super._init(json, 'y_axis_right', style);
 		}
 		
 		public override function resize( label_pos:Number, sc:ScreenCoords ):void {

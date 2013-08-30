@@ -23,7 +23,6 @@ package elements.axis {
 		 */
 		public function rotate_and_align( rotation:Number, align:String, parent:Sprite ): void
 		{ 
-			if (isNaN(rotation)) rotation = 0;
 			rotation = rotation % 360;
 			if (rotation < 0) rotation += 360;
 			

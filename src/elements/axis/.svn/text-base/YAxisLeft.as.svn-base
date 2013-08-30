@@ -6,6 +6,10 @@
 		function YAxisLeft() {}
 		
 		public override function init(json:Object): void {
+
+			this.labels = new YAxisLabelsLeft( this, json );
+			this.addChild( this.labels );
+			
 			//
 			// default values for a left axis
 			//
@@ -25,12 +29,6 @@
 			};
 			
 			super._init(json, 'y_axis', style);
-
-			this.labels = new YAxisLabelsLeft( this, json );
-			this.addChild( this.labels );
-
-			if ( this.labels.i_need_labels )
-				this.labels.make_labels(this.style.min, this.style.max, this.style.steps);
 		}
 		
 		public override function resize( label_pos:Number, sc:ScreenCoords ):void {

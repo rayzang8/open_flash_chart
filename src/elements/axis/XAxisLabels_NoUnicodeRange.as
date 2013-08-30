@@ -7,7 +7,7 @@ package elements.axis {
 	import elements.axis.AxisLabel;
 	import string.Utils;
 	import com.serialization.json.JSON;
-	import string.DateUtils;
+	import DateUtils;
 	
 	public class XAxisLabels extends Sprite {
 		
@@ -22,9 +22,8 @@ package elements.axis {
 		
 		//
 		// Ugh, ugly code so we can rotate the text:
-//		[Embed(systemFont = 'Arial', fontName = 'spArial', mimeType = 'application/x-font'
-//				,unicodeRange = 'ofcRange')
-//		]
+		[Embed(systemFont = 'Arial', fontName = 'spArial', mimeType = 'application/x-font'
+		]
 		public static var ArialFont__:Class;
 
 		function XAxisLabels( json:Object ) {
@@ -164,10 +163,6 @@ package elements.axis {
 			label_style.text = this.replace_magic_values(label_style.text, label_style.x);
 			
 			// Map X location to label string
-			if (label_style.x == null)
-			{
-				label_style.x = this.axis_labels.length;
-			}
 			this.axis_labels[label_style.x] = label_style.text;
 
 			// only create the label if necessary

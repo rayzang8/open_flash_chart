@@ -6,8 +6,9 @@ package elements.axis {
 	import flash.geom.Rectangle;
 	import elements.axis.AxisLabel;
 	import string.Utils;
-	import com.serialization.json.JSON;
 	import string.DateUtils;
+	import com.serialization.json.JSON;
+	// import DateUtils;
 	
 	public class XAxisLabels extends Sprite {
 		
@@ -17,14 +18,12 @@ package elements.axis {
 		private var style:Object;
 		private var userSpecifiedVisible:Object;
 		
-		private var offset3D:Number = 0;
-		private var height3D:Number = 0;
-		
 		//
 		// Ugh, ugly code so we can rotate the text:
-//		[Embed(systemFont = 'Arial', fontName = 'spArial', mimeType = 'application/x-font'
-//				,unicodeRange = 'ofcRange')
-//		]
+		//
+		// [Embed(systemFont='Arial', fontName='spArial', mimeType='application/x-font', unicodeRange='U+0020-U+007E')]
+		[Embed(systemFont = 'Arial', fontName = 'spArial', mimeType = 'application/x-font')]
+		
 		public static var ArialFont__:Class;
 
 		function XAxisLabels( json:Object ) {
@@ -38,25 +37,19 @@ package elements.axis {
 				rotate:		0,
 				visible:	null,
 				labels:		null,
-				text:		'#val#',  // default to display the position number or x value
-				steps:		null,
+				text:		'#val#',	// <-- default to display the position number or x value
+				steps:		null,		// <-- null for auto labels
 				size:		10,
 				align:		'auto',
 				colour:		'#000000',
-				justify: 	"left"
+				"visible-steps":	null
 			};
 			
 			// cache the text for tooltips
 			this.axis_labels = new Array();
 			
-			if( ( json.x_axis != null ) && ( json.x_axis.labels != null ) ) {
+			if( ( json.x_axis != null ) && ( json.x_axis.labels != null ) )
 				object_helper.merge_2( json.x_axis.labels, this.style );
-			    if (json.x_axis["3d"]) {
-					this.height3D = json.x_axis["3d"];
-					this.offset3D = 12;
-				}
-            }
-	
 				
 			// save the user specified visible value foe use with auto_labels
 			this.userSpecifiedVisible = this.style.visible;
@@ -84,9 +77,30 @@ package elements.axis {
 				// we WERE passed labels
 				//
 				this.need_labels = false;
+				if (this.style.steps == null)
+					this.style.steps = 1;
 				
+				//
+				// BUG: this should start counting at X MIN, not zero
+				//
+				var x:Number = 0;
+				var lblCount:Number = 0;
+				// Allow for only displaying some of the labels 
+				var visibleSteps:Number = (this.style["visible-steps"] == null) ? this.style.steps : this.style["visible-steps"];
+
 				for each( var s:Object in this.style.labels )
-					this.add( s, this.style );
+				{
+					var tmpStyle:Object = { };
+					object_helper.merge_2( this.style, tmpStyle );
+
+					tmpStyle.visible = ((lblCount % visibleSteps) == 0);
+					tmpStyle.x = x;
+					
+					// we need the x position for #x_label# tooltips
+					this.add( s, tmpStyle );
+					x++;
+					lblCount++;
+				}
 			}
 		}
 		
@@ -100,11 +114,10 @@ package elements.axis {
 			// if the user has passed labels we don't do this
 			//
 			if ( this.need_labels ) {
-				this.style.visible = this.userSpecifiedVisible;
 				var rev:Boolean = (range.min >= range.max); // min-max reversed?
 
 				// Use the steps specific to labels if provided by user
-				var lblSteps:Number = steps;
+				var lblSteps:Number = 1;
 				if (this.style.steps != null) lblSteps = this.style.steps;
 
 				// force max of 250 labels 
@@ -114,21 +127,24 @@ package elements.axis {
 				lblSteps = rev ? -Math.abs(lblSteps) : Math.abs(lblSteps);
 
 				// Allow for only displaying some of the labels 
-				var visibleSteps:Number = (this.style["visible-steps"] == null) ? 1 : this.style["visible-steps"];
-			
-				var lblCount:Number = 0;
+				var visibleSteps:Number = (this.style["visible-steps"] == null) ? steps : this.style["visible-steps"];
+
 				var tempStyle:Object = {};
 				object_helper.merge_2( this.style, tempStyle );
-				
+				var lblCount:Number = 0;
 				for ( var i:Number = range.min; rev ? i >= range.max : i <= range.max; i += lblSteps ) {
-					tempStyle.visible = this.style.visible;
-					if (tempStyle.visible == null) {
-						tempStyle.visible = ((lblCount % visibleSteps) == 0);
-					}
-
 					tempStyle.x = i;
+					// restore the user specified visble value
+					if (this.userSpecifiedVisible == null)
+					{
+						tempStyle.visible = ((lblCount % visibleSteps) == 0);
+						lblCount++;
+					}
+					else
+					{
+						tempStyle.visible = this.userSpecifiedVisible;
+					}
 					this.add( null, tempStyle );
-					lblCount = lblCount + 1;
 				}
 			}
 		}
@@ -141,11 +157,9 @@ package elements.axis {
 				text:		style.text,
 				rotate:		style.rotate,
 				size:		style.size,
-				colour:		style.colour,
 				align:		style.align,
 				visible:	style.visible,
-				x:			style.x,
-				justify:    style.justify
+				x:			style.x
 			};
 
 			//
@@ -156,18 +170,16 @@ package elements.axis {
 				label_style.text = label as String;
 			else
 				object_helper.merge_2( label, label_style );
-
-			//if (label_style.x == null) {
-				//label_style.x = this.axis_labels.length;
-			//}
-				// Replace magic date variables in x label text
-			label_style.text = this.replace_magic_values(label_style.text, label_style.x);
+			
+			// Replace magic date variables in x label text
+			if (label_style.x != null) {
+				label_style.text = this.replace_magic_values(label_style.text, label_style.x);
+			}
+			
+			var lines:Array = label_style.text.split( '<br>' );
+			label_style.text = lines.join( '\n' );
 			
 			// Map X location to label string
-			if (label_style.x == null)
-			{
-				label_style.x = this.axis_labels.length;
-			}
 			this.axis_labels[label_style.x] = label_style.text;
 
 			// only create the label if necessary
@@ -177,10 +189,8 @@ package elements.axis {
 				if( label_style.colour is String )
 					label_style.colour = Utils.get_colour( label_style.colour );
 
-				var l:AxisLabel = this.make_label( label_style );
-				//if (isNaN(l.xVal)) {
-					//l.xVal = this.axis_labels.length - 1;
-				//}
+				var l:TextField = this.make_label( label_style );
+				
 				this.addChild( l );
 			}
 		}
@@ -194,7 +204,7 @@ package elements.axis {
 		}
 	
 		
-		public function make_label( label_style:Object ):AxisLabel {
+		public function make_label( label_style:Object ):TextField {
 			// we create the text in its own movie clip, so when
 			// we rotate it, we can move the regestration point
 			
@@ -222,7 +232,7 @@ package elements.axis {
 			}
 
 			fmt.size = label_style.size;
-			fmt.align = label_style.justify;
+			fmt.align = "left";
 			title.setTextFormat(fmt);
 			title.autoSize = "left";
 			title.rotate_and_align( label_style.rotate, label_style.align, this );
@@ -257,7 +267,7 @@ package elements.axis {
 			return height;
 		}
 		
-		public function resize( sc:ScreenCoords, yPos:Number ) : void//, b:Box )
+		public function resize( sc:ScreenCoords, yPos:Number ) : void
 		{
 			
 			this.graphics.clear();
@@ -268,11 +278,11 @@ package elements.axis {
 				var child:AxisLabel = this.getChildAt(pos) as AxisLabel;
 				if (isNaN(child.xVal))
 				{
-					child.x = sc.get_x_tick_pos(pos) + child.xAdj - this.offset3D;
+					child.x = sc.get_x_tick_pos(pos) + child.xAdj;
 				}
 				else
 				{
-					child.x = sc.get_x_from_val(child.xVal) + child.xAdj - this.offset3D;
+					child.x = sc.get_x_from_val(child.xVal) + child.xAdj;
 				}
 				child.y = yPos + child.yAdj;
 			}

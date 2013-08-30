@@ -20,6 +20,7 @@ package elements.axis {
 		private var colour:Number;
 		public var offset:Boolean;
 		private var grid_colour:Number;
+		private var grid_visible:Boolean;
 		private var user_ticks:Boolean;
 		private var user_labels:Array;
 		
@@ -37,6 +38,7 @@ package elements.axis {
 				colour:			'#784016',
 				offset:			true,
 				'grid-colour':	'#F5E1AA',
+				'grid-visible':	true,
 				'3d':			0,
 				steps:			1,
 				min:			0,
@@ -53,7 +55,7 @@ package elements.axis {
 			this.colour = this.style.colour;
 			// is the axis offset (see ScreenCoords)
 			this.offset = this.style.offset;
-			this.grid_colour = this.style.grid_colour;
+			this.grid_visible = this.style['grid-visible'];
 
 			this.colour = Utils.get_colour( this.style.colour );
 			this.grid_colour = Utils.get_colour( this.style['grid-colour'] );
@@ -229,7 +231,7 @@ package elements.axis {
 					this.graphics.endFill();
 				}
 			}
-			else
+			else if(this.grid_visible)
 			{
 				var rev:Boolean = (this.style.min >= this.style.max); // min-max reversed?
 				var tickMax:Number = /*(rev && this.style.offset) ? this.style.max-2 : */ this.style.max
@@ -277,22 +279,19 @@ package elements.axis {
 				for each( var lbl:Object in this.user_labels )
 				{
 					var xVal:Number = sc.get_x_from_val(lbl.x);
-					// Draw the tick down from the front
 					this.graphics.beginFill(this.colour, 1);
-					this.graphics.drawRect( xVal-offset, sc.bottom+offset+h, w, this.tick_height );
+					this.graphics.drawRect( xVal, sc.bottom + x_axis_height, w, this.tick_height );
 					this.graphics.endFill();
 				}
 			}
 			else
 			{
-				var rev:Boolean = (this.style.min >= this.style.max); // min-max reversed?
-				for( var i:Number=0; rev ? i >= this.style.max : i <= this.style.max; i+=this.steps )
+				for( var i:Number=0; i < this.style.max; i+=this.steps )
 				{
 					var pos:Number = sc.get_x_tick_pos(i);
 					
-					// Draw the tick down from the front
 					this.graphics.beginFill(this.colour, 1);
-					this.graphics.drawRect( pos-offset, sc.bottom+offset+h, w, this.tick_height );
+					this.graphics.drawRect( pos, sc.bottom + x_axis_height, w, this.tick_height );
 					this.graphics.endFill();
 				}
 			}
@@ -379,10 +378,6 @@ package elements.axis {
 					this.graphics.endFill();
 				}
 			}
-		}
-		
-		public function height_():Number {
-			return this.stroke + this.tick_height;
 		}
 		
 		public function get_height():Number {

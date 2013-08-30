@@ -1,0 +1,95 @@
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svnroot/openflashchart/!svn/ver/496/version-2/open-flash-chart/trunk/elements/axis
+END
+RadarAxis.as
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svnroot/openflashchart/!svn/ver/424/version-2/open-flash-chart/trunk/elements/axis/RadarAxis.as
+END
+RadarSpokeLabels.as
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svnroot/openflashchart/!svn/ver/424/version-2/open-flash-chart/trunk/elements/axis/RadarSpokeLabels.as
+END
+YAxisLabelsRight.as
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svnroot/openflashchart/!svn/ver/494/version-2/open-flash-chart/trunk/elements/axis/YAxisLabelsRight.as
+END
+XAxisLabels.as
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svnroot/openflashchart/!svn/ver/443/version-2/open-flash-chart/trunk/elements/axis/XAxisLabels.as
+END
+YTextField.as
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svnroot/openflashchart/!svn/ver/424/version-2/open-flash-chart/trunk/elements/axis/YTextField.as
+END
+XLabelStyle.as
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svnroot/openflashchart/!svn/ver/424/version-2/open-flash-chart/trunk/elements/axis/XLabelStyle.as
+END
+YAxisBase.as
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svnroot/openflashchart/!svn/ver/496/version-2/open-flash-chart/trunk/elements/axis/YAxisBase.as
+END
+YLabelStyle.as
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svnroot/openflashchart/!svn/ver/424/version-2/open-flash-chart/trunk/elements/axis/YLabelStyle.as
+END
+YAxisLabelsLeft.as
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svnroot/openflashchart/!svn/ver/494/version-2/open-flash-chart/trunk/elements/axis/YAxisLabelsLeft.as
+END
+YAxisRight.as
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svnroot/openflashchart/!svn/ver/496/version-2/open-flash-chart/trunk/elements/axis/YAxisRight.as
+END
+XAxis.as
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svnroot/openflashchart/!svn/ver/424/version-2/open-flash-chart/trunk/elements/axis/XAxis.as
+END
+RadarAxisLabels.as
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svnroot/openflashchart/!svn/ver/424/version-2/open-flash-chart/trunk/elements/axis/RadarAxisLabels.as
+END
+AxisLabel.as
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svnroot/openflashchart/!svn/ver/424/version-2/open-flash-chart/trunk/elements/axis/AxisLabel.as
+END
+YAxisLeft.as
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svnroot/openflashchart/!svn/ver/496/version-2/open-flash-chart/trunk/elements/axis/YAxisLeft.as
+END
+YAxisLabelsBase.as
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svnroot/openflashchart/!svn/ver/494/version-2/open-flash-chart/trunk/elements/axis/YAxisLabelsBase.as
+END

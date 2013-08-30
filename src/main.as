@@ -95,7 +95,7 @@ package  {
 			{
 				// no data found -- debug mode?
 				try {
-					var file:String = "./data-files/bar-2.txt";
+					var file:String = "./data-files/area-line.txt";
 					this.load_external_file( file );
 
 					/*

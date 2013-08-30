@@ -16,13 +16,12 @@ package elements.axis {
 				{
 					values = [];
 					
-					var i:Number = parent.style.min;
-					var steps:Number = parent.style.steps;
-					
+					// use passed in min if provided else zero
+					var i:Number = (json.y_axis && json.y_axis.min) ? json.y_axis.min : 0;
 					for each( var s:String in json.y_axis.labels )
 					{
 						values.push( { val:s, pos:i } );
-						i = i + steps;
+						i++;
 					}
 					
 					//
@@ -84,6 +83,7 @@ package elements.axis {
 		
 		
 		public override function make_labels(min:Number, max:Number, steps:Number): void {
+			
 			if ( !this.i_need_labels )
 				return;
 				

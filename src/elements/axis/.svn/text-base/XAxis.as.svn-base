@@ -277,22 +277,19 @@ package elements.axis {
 				for each( var lbl:Object in this.user_labels )
 				{
 					var xVal:Number = sc.get_x_from_val(lbl.x);
-					// Draw the tick down from the front
 					this.graphics.beginFill(this.colour, 1);
-					this.graphics.drawRect( xVal-offset, sc.bottom+offset+h, w, this.tick_height );
+					this.graphics.drawRect( xVal, sc.bottom + x_axis_height, w, this.tick_height );
 					this.graphics.endFill();
 				}
 			}
 			else
 			{
-				var rev:Boolean = (this.style.min >= this.style.max); // min-max reversed?
-				for( var i:Number=0; rev ? i >= this.style.max : i <= this.style.max; i+=this.steps )
+				for( var i:Number=0; i < this.style.max; i+=this.steps )
 				{
 					var pos:Number = sc.get_x_tick_pos(i);
 					
-					// Draw the tick down from the front
 					this.graphics.beginFill(this.colour, 1);
-					this.graphics.drawRect( pos-offset, sc.bottom+offset+h, w, this.tick_height );
+					this.graphics.drawRect( pos, sc.bottom + x_axis_height, w, this.tick_height );
 					this.graphics.endFill();
 				}
 			}
@@ -390,7 +387,7 @@ package elements.axis {
 			{
 				// 12 is the size of the slanty
 				// 3D part of the X axis
-				return this.three_d_height+12+this.tick_height + this.labels.get_height();
+				return this.three_d_height+12+this.tick_height;
 			}
 			else
 				return this.stroke + this.tick_height + this.labels.get_height();

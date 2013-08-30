@@ -2,10 +2,9 @@
 	import flash.display.Sprite;
 	import elements.axis.YTextField;
 	import flash.text.TextFormat;
-//	import org.flashdevelop.utils.FlashConnect;
+	import org.flashdevelop.utils.FlashConnect;
 	import br.com.stimuli.string.printf;
 	import string.Utils;
-	import string.DateUtils;
 	
 	public class YAxisLabelsBase extends Sprite {
 		
@@ -69,12 +68,13 @@
 		//
 		protected function make_labels_(min:Number, max:Number, right:Boolean, steps:Number, lblText:String):void {
 			var values:Array = [];
-			//tr.ace("make_labels_");
+			
 			var min_:Number = Math.min( min, max );
 			var max_:Number = Math.max( min, max );
 			
 			// hack: hack: http://kb.adobe.com/selfservice/viewContent.do?externalId=tn_13989&sliceId=1
 			max_ += 0.000004;
+			
 			var eek:Number = 0;
 			for( var i:Number = min_; i <= max_; i+=steps ) {
 				values.push( { val:lblText, pos:i } );
@@ -106,7 +106,7 @@
 			tf.text = this.replace_magic_values(lblStyle.val, lblStyle.pos);
 			var fmt:TextFormat = new TextFormat();
 			fmt.color = lblStyle.colour;
-			fmt.font = lblStyle.rotate != null ? "spArial" : "Verdana";
+			fmt.font = lblStyle.rotate == "vertical" ? "spArial" : "Verdana";
 			fmt.size = lblStyle.size;
 			fmt.align = "right";
 			tf.setTextFormat(fmt);
@@ -117,11 +117,6 @@
 				tf.embedFonts = true;
 				tf.antiAliasType = flash.text.AntiAliasType.ADVANCED;
 			} 
-			else if ((lblStyle.rotate != null) && (lblStyle.rotate != 0))
-			{
-				tf.embedFonts = true;
-				tf.antiAliasType = flash.text.AntiAliasType.ADVANCED;
-			}
 			return tf;
 		}
 
@@ -149,9 +144,6 @@
 
 		private function replace_magic_values(labelText:String, yVal:Number):String {
 			labelText = labelText.replace('#val#', NumberUtils.formatNumber(yVal));
-			labelText = DateUtils.replace_magic_values(labelText, yVal);
-			labelText = labelText.replace('#ygmdate', "#gmdate");
-			labelText = DateUtils.replace_magic_values(labelText, yVal);
 			return labelText;
 		}
 	}
