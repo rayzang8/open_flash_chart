@@ -7,7 +7,7 @@
 		private var outline_colour:Number;
 		
 		//TODO: remove
-		protected var style:Object;
+//		protected var style:Object;
 		
 		
 		public function BarOutline( json:Object, group:Number ) {

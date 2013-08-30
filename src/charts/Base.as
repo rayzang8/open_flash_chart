@@ -10,6 +10,8 @@ package charts {
 		// accessed by the Keys object to display the key
 		protected var key:String;
 		protected var font_size:Number;
+		protected var key_on_click:String;
+		public var visibilityID:Number;
 		
 		
 		public var colour:Number;
@@ -42,7 +44,13 @@ package charts {
 			
 			// some lines may not have a key
 			if( (this.font_size > 0) && (this.key != '' ) )
-				tmp.push( { 'text':this.key, 'font-size':this.font_size, 'colour':this.get_colour() } );
+				tmp.push( { 'text':this.key, 
+				'font-size':this.font_size, 
+				'colour':this.get_colour(),
+				'on-click':this.key_on_click,
+				'series':this,
+				'visibility-id':this.visibilityID
+				} );
 				
 			return tmp;
 		}

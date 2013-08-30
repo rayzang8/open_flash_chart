@@ -26,6 +26,9 @@
 		private var link:String;
 		public var is_tip:Boolean;
 		
+		protected var on_click_text:String;
+		protected var on_click_window:String;
+		
 		public var line_mask:Sprite;
 		protected var right_axis:Boolean;
 		

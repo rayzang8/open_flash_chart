@@ -9,7 +9,7 @@
 	public class BarBase extends Base
 	{
 		protected var group:Number;
-		//protected var style:Object;
+		protected var style:Object;
 		protected var props:Properties;
 		protected var on_show:Properties;
 		
@@ -38,6 +38,19 @@
 			this.on_show = new Properties(json['on-show'], on_show_root);
 		*/
 			this.on_show = this.get_on_show(json['on-show']);
+
+			this.style = {
+				values:				[],
+				colour:				'#3030d0',
+				text:				'',		// <-- default not display a key
+				'font-size':		12,
+				tip:				'#val#<br>#x_label#',
+				alpha:				0.6,
+				'on-click':			null,
+				axis:				'left',
+				barwidth:			0.8,
+				overlap:			0
+			};
 			
 			this.colour		= this.props.get_colour('colour');
 			this.key		= this.props.get('text');

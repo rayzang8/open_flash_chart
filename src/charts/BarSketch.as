@@ -8,7 +8,7 @@
 		private var offset:Number;
 		
 		// TODO: remove
-		protected var style:Object;
+//		protected var style:Object;
 		
 		public function BarSketch( json:Object, group:Number ) {
 			

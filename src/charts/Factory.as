@@ -50,6 +50,11 @@ package charts {
 						bar_group++;
 						break;
 						
+					case 'hbar_stack':
+						collection.add( new HBarStack( elements[i], c, bar_group ) );
+						bar_group++;
+						break;
+						
 					case 'scatter':
 						collection.add( new Scatter( elements[i] ) );
 						break;

@@ -324,11 +324,11 @@ package {
 		//
 		// index: the n'th bar from the left
 		//
-		public function get_bar_coords( index:Number, group:Number ):Object {
+		public function get_bar_coords( index:Number, group:Number, barWidthPercentage:Number  ):Object {
 			var item_width:Number = this.width_() / this.x_range.count();
 			
 			// the bar(s) have gaps between them:
-			var bar_set_width:Number = item_width*0.8;
+			var bar_set_width:Number = item_width*barWidthPercentage;
 			
 			// get the margin between sets of bars:
 			var tmp:Number = 0;
@@ -346,13 +346,31 @@ package {
 			return { x:left, width:bar_width };
 		}
 		
-		public function get_horiz_bar_coords( index:Number, group:Number ):Object {
+//		public function get_horiz_bar_coords( index:Number, group:Number ):Object {
+//			
+//			// split the height into equal heights for each bar
+//			var bar_width:Number = this.height / this.y_range.count();
+//			
+//			// the bar(s) have gaps between them:
+//			var bar_set_width:Number = bar_width*0.8;
+//			
+//			// 1 bar == 100% wide, 2 bars = 50% wide each
+//			var group_width:Number = bar_set_width / this.bar_groups;
+//			
+//			var bar_top:Number = this.top+((bar_width-bar_set_width)/2);
+//			var top:Number = bar_top+(index*bar_width);
+//			top += group_width * group;
+//			
+//			return { y:top, width:group_width };
+//		}
+		
+		public function get_horiz_bar_coords( index:Number, group:Number, barWidthPercentage:Number ):Object {
 			
 			// split the height into equal heights for each bar
-			var bar_width:Number = this.height / this.y_range.count();
+			var bar_width:Number = this.height / (this.y_range.count()); //  +1); no longer needed? - DZ
 			
 			// the bar(s) have gaps between them:
-			var bar_set_width:Number = bar_width*0.8;
+			var bar_set_width:Number = bar_width * barWidthPercentage;  // 0.8;
 			
 			// 1 bar == 100% wide, 2 bars = 50% wide each
 			var group_width:Number = bar_set_width / this.bar_groups;
@@ -361,9 +379,9 @@ package {
 			var top:Number = bar_top+(index*bar_width);
 			top += group_width * group;
 			
+			tr.aces("index", index, "top", top, "width", group_width);
 			return { y:top, width:group_width };
 		}
-		
 		
 		public function makePointHLC( x:Number, high:Number, close:Number, low:Number, right_axis:Boolean, group:Number, group_count:Number )
 		:PointHLC {

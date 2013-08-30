@@ -9,6 +9,7 @@
 	import global.Global;
 	import charts.series.Element;
 	import string.Utils;
+	import string.DateUtils;
 	
 	public class Base extends Element
 	{
@@ -20,7 +21,8 @@
 		protected var mouse_out_alpha:Number;
 		private var on_show_animate:Boolean;
 		protected var on_show:Properties;
-		
+		protected var barWidthPercentage:Number;
+		protected var barOverlap:Number;
 		
 		public function Base( index:Number, props:Properties, group:Number )
 		{
@@ -30,11 +32,16 @@
 			this.colour = props.get_colour('colour');
 				
 			this.tooltip = this.replace_magic_values( props.get('tip') );
+			this.barWidthPercentage = props.has('barwidth') ? props.get('barwidth') : 0.8;
+			this.barOverlap = props.has('overlap') ? props.get('overlap') : 0;
 			
 			this.group = group;
 			this.visible = true;
 			this.on_show_animate = true;
-			this.on_show = props.get('on-show');
+			if (props.has('on-show') ) 
+				this.on_show = props.get('on-show')
+			else
+				this.on_show = new Properties({});
 			
 			// remember what our original alpha is:
 			this.mouse_out_alpha = props.get('alpha');
@@ -48,9 +55,18 @@
 			// This is UGLY!!! We need to decide if we are passing in a SINGLE style object,
 			// or many parameters....
 			//
-			if ( props.has('on-click') )	// <-- may be null/not set
-				if( props.get('on-click') != false )	// <-- may be FALSE
-					this.set_on_click( props.get('on-click') );
+//			if ( props.has('on-click') )	// <-- may be null/not set
+//				if( props.get('on-click') != false )	// <-- may be FALSE
+//					this.set_on_click( props.get('on-click') );
+				
+			if( props.has('on-click') )
+				this.set_on_click( props.get('on-click') );
+			if( props.has('on-click-window') )
+				this.on_click_window = props.get('on-click-window');
+			if( props.has('on-click-text') )
+				this.on_click_text = props.get('on-click-text');
+			this.on_click_text = this.replace_magic_values(this.on_click_text);
+
 				
 			if( props.has('axis') )
 				if( props.get('axis') == 'right' )
@@ -74,10 +90,18 @@
 		}
 		
 		protected function replace_magic_values( t:String ): String {
+//			t = t.replace('#top#', NumberUtils.formatNumber( this.top ));
+//			t = t.replace('#bottom#', NumberUtils.formatNumber( this.bottom ));
+//			t = t.replace('#val#', NumberUtils.formatNumber( this.top - this.bottom ));
+//			t = DateUtils.replace_magic_values(t, val);
 			
-			t = t.replace('#top#', NumberUtils.formatNumber( this.top ));
-			t = t.replace('#bottom#', NumberUtils.formatNumber( this.bottom ));
-			t = t.replace('#val#', NumberUtils.formatNumber( this.top - this.bottom ));
+			if (t != null) {
+				var val:Number = this.top - this.bottom;
+				t = t.replace('#top#', NumberUtils.formatNumber( this.top ));
+				t = t.replace('#bottom#', NumberUtils.formatNumber( this.bottom ));
+				t = t.replace('#val#', NumberUtils.formatNumber( val ));
+				t = DateUtils.replace_magic_values(t, val);
+			}
 			
 			return t;
 		}
@@ -121,7 +145,8 @@
 		// returns the bounds so the bar can draw its self.
 		//
 		protected function resize_helper( sc:ScreenCoords ):Object {
-			var tmp:Object = sc.get_bar_coords(this.index, this.group);
+			var tmp:Object = sc.get_bar_coords(this.index, this.group,this.barWidthPercentage);
+			var barWidthAdjustment:Number = tmp.width * this.barOverlap;
 
 			var bar_top:Number = sc.get_y_from_val(this.top, this.right_axis);
 			var bar_bottom:Number;
@@ -160,12 +185,13 @@
 				//
 				this.y = top;
 				this.x = tmp.x;
+				this.x = tmp.x - (this.group * barWidthAdjustment);
 			}
 				
 			//
 			// return the bounds to draw the item:
 			//
-			return { width:tmp.width, top:top, height:height, upside_down:upside_down };
+			return { width:(tmp.width + barWidthAdjustment), top:top, height:height, upside_down:upside_down };
 		}
 		
 		protected function first_show(x:Number, y:Number, width:Number, height:Number): void {

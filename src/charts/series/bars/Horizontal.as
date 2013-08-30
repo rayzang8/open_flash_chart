@@ -16,6 +16,7 @@
 		
 		public var colour:Number;
 		protected var group:Number;
+		protected var barWidthPercentage:Number;
 		
 		public function Horizontal( index:Number, style:Object, group:Number )
 		{
@@ -35,6 +36,8 @@
 			this.colour = style.colour;
 			this.group = group;
 			this.visible = true;
+			
+			this.barWidthPercentage = (style.barwidth != null) ? style.barwidth : 0.8;
 			
 			this.alpha = 0.5;
 			
@@ -67,7 +70,7 @@
 			// is it OK to cast up like this?
 			var sc2:ScreenCoords = sc as ScreenCoords;
 			
-			var tmp:Object = sc2.get_horiz_bar_coords( this.index, this.group );
+			var tmp:Object = sc2.get_horiz_bar_coords( this.index, this.group,this.barWidthPercentage);
 			
 			var left:Number  = sc.get_x_from_val( this.left );
 			var right:Number = sc.get_x_from_val( this.right );
