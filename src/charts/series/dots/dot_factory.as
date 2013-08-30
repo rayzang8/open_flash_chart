@@ -32,6 +32,10 @@
 					return new Hollow(index, style);
 					break;
 					
+				case 'ball':
+					return new ball(index, style);
+					break;
+					
 				default:
 				//
 				// copy out the bow tie and then remove
