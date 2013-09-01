@@ -38,7 +38,9 @@
 			this.colour = style.colour;
 
 			var fmt:TextFormat = new TextFormat();
+			//label color,use 0,all text is black,use style.colour, use the point color
 			fmt.color = style.colour;
+			fmt.color = 0;//style.colour;
 			fmt.font = parentStyle.font;
 			fmt.size = style['font-size'];
 			fmt.bold = style.bold == null ? false : style.bold;

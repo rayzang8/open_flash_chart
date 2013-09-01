@@ -25,13 +25,13 @@ package elements.labels {
 			this.style = {
 				position:        "top",
 				padding:         4,
-				border:          true,
+				border:          false,
 				stroke:          1,
 				border_colour:   "#808080",
 				bg_colour:       "#f8f8d8",
 				alpha:           1,
 				margin:			 4,
-				shadow:		     true,
+				shadow:		     false,
 				font:			 'Verdana'
 			}
 			object_helper.merge_2(json, this.style);
@@ -105,7 +105,8 @@ package elements.labels {
 			y += (height / 2);
 			this.graphics.lineStyle(0, colour, 0);
 			this.graphics.beginFill( colour, 100 );
-			this.graphics.drawRect( x, y - 1, 10, 2 );
+//			this.graphics.drawRect( x, y - 1, 10, 2 );
+			this.graphics.drawCircle( x + 5, y + 1, 5);
 			this.graphics.endFill();
 			return x+12;
 		}
