@@ -60,23 +60,23 @@
 
 		public function set_on_click( o:Object ):void {
 			// Draw an invisible click panel
-			if (o['on-click'] != null) {
-				this.link = o['on-click'];
-				this.series = o.series as Sprite;
-				this.visibilityID = o['visibility-id'];
-				this.toggleVisibility = o['toggle-visibility'];
-
-				this.clickPanel = new Sprite();
-				this.clickPanel.graphics.lineStyle(0, 0, 0);
-				this.clickPanel.graphics.beginFill(0, 0);
-				this.clickPanel.graphics.drawRect(0, 0, this.myLabel.width, this.myLabel.height);
-				this.clickPanel.graphics.endFill();
-				this.clickPanel.buttonMode = true;
-				this.clickPanel.useHandCursor = true;
-				this.addChild(this.clickPanel);
-				// weak references so the garbage collector will kill it:
-				this.clickPanel.addEventListener(MouseEvent.MOUSE_UP, this.mouseUp, false, 0, true);
-			}
+//			if (o['on-click'] != null) {
+//				this.link = o['on-click'];
+//				this.series = o.series as Sprite;
+//				this.visibilityID = o['visibility-id'];
+//				this.toggleVisibility = o['toggle-visibility'];
+//
+//				this.clickPanel = new Sprite();
+//				this.clickPanel.graphics.lineStyle(0, 0, 0);
+//				this.clickPanel.graphics.beginFill(0, 0);
+//				this.clickPanel.graphics.drawRect(0, 0, this.myLabel.width, this.myLabel.height);
+//				this.clickPanel.graphics.endFill();
+//				this.clickPanel.buttonMode = true;
+//				this.clickPanel.useHandCursor = true;
+//				this.addChild(this.clickPanel);
+//				// weak references so the garbage collector will kill it:
+//				this.clickPanel.addEventListener(MouseEvent.MOUSE_UP, this.mouseUp, false, 0, true);
+//			}
 		}
 		
 		private function mouseUp(event:Event):void {

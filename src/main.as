@@ -95,7 +95,9 @@ package  {
 			{
 				// no data found -- debug mode?
 				try {
-					var file:String = "./data-files/pie-1.txt";
+					var file:String = "./data-files/pie-4.txt";
+//					var file:String = "./data-files/stack-bar-1.txt";
+//					var file:String = "./data-files/hstack-bar-keys.txt";
 					this.load_external_file( file );
 
 					/*
@@ -609,7 +611,6 @@ package  {
 			// FlashConnect.trace("stageWidth: " + stage.stageWidth + " stageHeight: " + stage.stageHeight);
 			this.background.resize();
 			this.title.resize();
-			
 			var left:Number   = this.y_legend.get_width() /*+ this.y_labels.get_width()*/ + this.y_axis.get_width();
 
 			// Must resize "top" keys legend to feed ScreenCoords
@@ -759,7 +760,9 @@ false,
 			else
 			{
 				if (json.legend == null) json.legend = { };
-				if (json.legend.visible == null) json.legend.visible = false;
+				if (json.legend.visible == null) 
+					json.legend.visible = false;
+					
 				// this is a PIE chart
 				// this is a PIE chart
 				this.obs = Factory.MakeChart( json );
@@ -767,6 +770,7 @@ false,
 				this.tooltip.set_tip_style( Tooltip.NORMAL );
 				this.keys = new Keys( this.obs, json.legend );
 				this.addChild( this.keys );
+				
 			}
 
 			// these are added in the Flash Z Axis order

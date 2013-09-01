@@ -1,14 +1,12 @@
 package elements.labels {
 	import charts.Base;
 	import charts.ObjectCollection;
-	import elements.labels.Key;
-	import string.Utils;
-	import com.serialization.json.JSON;
+	import charts.Pie;
+	
 	import flash.display.Sprite;
-	import flash.text.TextField;
-	import flash.text.TextFormat;
-
 	import flash.filters.DropShadowFilter;
+	
+	import string.Utils;
 	
 	public class Keys extends Sprite {
 		private var _height:Number = 0;
@@ -37,21 +35,26 @@ package elements.labels {
 				font:			 'Verdana'
 			}
 			object_helper.merge_2(json, this.style);
-			
 			this.colours = new Array();
 			
 			this.seriesCollection = stuff;
-			
 			if (this.style.visible != false) {
 				var key:Number = 0;
 				for each( var b:Base in stuff.sets )
 				{
-					for each( var o:Object in b.get_keys() ) {
-						this.make_key( o );
-						this.colours.push( o.colour );
-						key++;
-
-					}
+//					if(b is charts.Pie) {
+////						var style = (b as charts.Pie).style;
+//						var keys = (b as charts.Pie).keys;
+//						this.make_key( keys );
+//						this.colours.push( style.colour );
+//						key++;
+//					} else {
+						for each( var o:Object in b.get_keys() ) {
+							this.make_key( o );
+							this.colours.push( o.colour );
+							key++;
+						}
+//					}
 				}
 			}			
 			this.count = key;
@@ -60,6 +63,8 @@ package elements.labels {
 				this.build_right_legend();
 			}
 		}
+		
+
 		
 		// each key is a MovieClip with text on it
 		private function make_key( o:Object ) : void

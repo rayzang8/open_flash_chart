@@ -1,13 +1,11 @@
 ﻿package charts {
-	import charts.series.pies.PieLabel;
-	import flash.external.ExternalInterface;
-	import string.Utils;
 	import charts.series.Element;
-	import charts.series.pies.PieSliceContainer;
 	import charts.series.pies.DefaultPieProperties;
+	import charts.series.pies.PieSliceContainer;
+	
 	import global.Global;
 	
-	import flash.display.Sprite;
+	import string.Utils;
 
 	public class Pie extends Base
 	{
@@ -21,6 +19,8 @@
 		private var easing:Function;
 		public var style:Object;
 		public var total_value:Number = 0;
+		public var text:String;		
+		
 		
 		// new:
 		private var props:Properties;
@@ -34,6 +34,7 @@
 			
 			this.style = {
 				colours:			["#900000", "#009000"]	// slices colours
+				
 			}
 			
 			object_helper.merge_2( json, this.style );			
@@ -52,10 +53,33 @@
 			this.label_line = 10;
 
 			this.values = json.values;
+			
+			
 			this.add_values();
 		}
 		
-		
+		public override function get_keys(): Object {
+			
+			var tmp:Array = [];
+			
+			for each( var o:Object in this.style.keys ) {
+				// some lines may not have a key
+				if ( o.text && isNaN(o.colour) ) {
+					if ( o.colour ) {
+						o.colour = string.Utils.get_colour( o.colour );
+					}
+					if ( o['font-size'] == null) {
+						o['font-size'] = this.style['font-size'];
+					}
+					o['on-click'] = this.key_on_click;
+					o.series = this;
+					o['visibility-id'] = this.visibilityID;
+					tmp.push( o );
+				}
+			}
+			
+			return tmp;
+		}		
 		//
 		// Pie chart make is quite different to a normal make
 		//
