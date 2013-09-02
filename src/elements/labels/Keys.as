@@ -1,7 +1,6 @@
 package elements.labels {
 	import charts.Base;
 	import charts.ObjectCollection;
-	import charts.Pie;
 	
 	import flash.display.Sprite;
 	import flash.filters.DropShadowFilter;
@@ -23,7 +22,9 @@ package elements.labels {
 		public function Keys( stuff:ObjectCollection, json:Object = null )
 		{
 			this.style = {
+				icon:			"rect", //rect    circle
 				position:        "top",
+				align:			 "center",//left    center   right(default center)
 				padding:         4,
 				border:          false,
 				stroke:          1,
@@ -105,8 +106,11 @@ package elements.labels {
 			y += (height / 2);
 			this.graphics.lineStyle(0, colour, 0);
 			this.graphics.beginFill( colour, 100 );
-//			this.graphics.drawRect( x, y - 1, 10, 2 );
-			this.graphics.drawCircle( x + 5, y + 1, 5);
+			if(this.style.icon == 'rect') {
+				this.graphics.drawRect( x, y - 3, 12, 6 );
+			} else {
+				this.graphics.drawCircle( x + 5, y + 1, 5);				
+			}
 			this.graphics.endFill();
 			return x+12;
 		}
@@ -125,13 +129,14 @@ package elements.labels {
 
 		// shuffle the keys into place, keeping note of the total
 		// height the key block has taken up
-		public function resize_top( x:Number, y:Number ):void {
+		public function resize_top( yLegendWidth:Number,stageWidth:Number, y:Number ):void {
+			
 			if ((this.style.position != "right") &&
 				(this.style.visible != false)) {
 				if( this.count == 0 )
 					return;
 				
-				this.x = (x == 0) ? 10 : x;
+				this.x = 0;
 				this.y = y;
 				
 				var height:Number = 0;
@@ -139,11 +144,12 @@ package elements.labels {
 				var y:Number = 0;
 				
 				this.graphics.clear();
+				var totalWidth:Number = 0;
 				
 				for( var i:Number=0; i<this.numChildren; i++ )
 				{
 					var width:Number = this.getChildAt(i).width;
-					
+					totalWidth += width;
 					if( ( this.x + x + width + 12 ) > this.stage.stageWidth )
 					{
 						// it is past the edge of the stage, so move it down a line
@@ -154,17 +160,27 @@ package elements.labels {
 						
 					this.draw_line( x, y, this.getChildAt(i).height, this.colours[i] );
 					x += 12;
-
+					
 					this.getChildAt(i).x = x;
 					this.getChildAt(i).y = y;
 					
 					// move next key to the left + some padding between keys
 					x += width + 10;
+					totalWidth += 12 + 10;
 				}
 				
 				// Ugly code:
 				height += this.getChildAt(0).height;
 				this._height = height;
+				trace(stageWidth);
+				if(this.style.align == 'left') {
+					this.x += yLegendWidth;
+				} else if(this.style.align == 'right') {
+					this.x = stageWidth - totalWidth;
+				} else {//center  default
+					this.x += stageWidth / 2 - totalWidth / 2;
+				}
+				
 			}
 			else
 			{
@@ -185,7 +201,13 @@ package elements.labels {
 			}
 			else
 			{
-				this.y = sc.top + (sc.height - this.height) / 2;
+				if(this.style.align == 'left') {
+					this.y = sc.top + 20;
+				} else if(this.style.align == 'right') {
+					this.y = sc.top + sc.height - this.height - 20;// + (sc.height - this.height) / 2;
+				} else {//default center
+					this.y = sc.top + (sc.height - this.height) / 2;
+				}
 				this.scaleX = 1;
 				this.scaleY = 1;
 			}

@@ -95,7 +95,7 @@ package  {
 			{
 				// no data found -- debug mode?
 				try {
-					var file:String = "./data-files/pie-4.txt";
+					var file:String = "./data-files/pie-1.txt";
 //					var file:String = "./data-files/stack-bar-1.txt";
 //					var file:String = "./data-files/hstack-bar-keys.txt";
 					this.load_external_file( file );
@@ -528,7 +528,7 @@ package  {
 			this.background.resize();
 			this.title.resize();
 
-			this.keys.resize_top( 0, this.title.get_height() );
+			this.keys.resize_top( 10,this.stage.stageWidth, this.title.get_height() );
 			var right:Number = this.stage.stageWidth - this.keys.get_right_width();
 			var top:Number = this.title.get_height() + this.keys.get_height();
 			
@@ -551,7 +551,7 @@ package  {
 			
 			this.background.resize();
 			this.title.resize();
-			this.keys.resize_top( 0, this.title.get_height() );
+			this.keys.resize_top( this.y_legend.get_width(),this.stage.stageWidth, this.title.get_height() );
 				
 			var top:Number = this.title.get_height() + this.keys.get_height();
 			
@@ -614,7 +614,7 @@ package  {
 			var left:Number   = this.y_legend.get_width() /*+ this.y_labels.get_width()*/ + this.y_axis.get_width();
 
 			// Must resize "top" keys legend to feed ScreenCoords
-			this.keys.resize_top( left, this.title.get_height() );
+			this.keys.resize_top( left, this.stage.stageWidth,this.title.get_height() );
 				
 			var top:Number = this.title.get_height() + this.keys.get_height();
 			
