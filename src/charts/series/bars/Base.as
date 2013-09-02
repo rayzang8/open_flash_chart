@@ -30,7 +30,6 @@
 			this.index = index;
 			this.parse_value(props);
 			this.colour = props.get_colour('colour');
-				
 			this.tooltip = this.replace_magic_values( props.get('tip') );
 			this.barWidthPercentage = props.has('barwidth') ? props.get('barwidth') : 0.8;
 			this.barOverlap = props.has('overlap') ? props.get('overlap') : 0;

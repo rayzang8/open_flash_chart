@@ -16,7 +16,6 @@
 		private var total:Number;
 		
 		public function StackCollection( index:Number, style:Object, group:Number, keys:Array ) {
-			
 			this.tooltip = style.tip;
 			// this is very similar to a normal
 			// PointBarBase but without the mouse
@@ -71,6 +70,7 @@
 						total:		this.total,
 						tip:		this.tooltip,
 						alpha:		style.alpha,
+						barwidth:   style.barwidth,
 						'on-click': style['on-click'],
 						'on-click-text': style['on-click-text'],
 						'on-click-window': style['on-click-window']

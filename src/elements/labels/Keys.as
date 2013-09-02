@@ -172,7 +172,6 @@ package elements.labels {
 				// Ugly code:
 				height += this.getChildAt(0).height;
 				this._height = height;
-				trace(stageWidth);
 				if(this.style.align == 'left') {
 					this.x += yLegendWidth;
 				} else if(this.style.align == 'right') {

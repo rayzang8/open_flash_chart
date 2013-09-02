@@ -16,7 +16,6 @@
 			// is set by the parent collection later
 			this.total =  style.total;
 			this.key = style.text;
-			
 			// HACK:
 			var p:Properties = new Properties(style);
 			super(index, p, group);
