@@ -83,7 +83,6 @@
 		// value is an array (a stack) of bar stacks
 		//
 		protected override function get_element( index:Number, value:Object ): Element {
-			trace(this.style.barwidth);
 			//
 			// this is the style for a stack:
 			//
@@ -97,7 +96,6 @@
 				'on-click-text': this.style['on-click-text'],
 				'on-click-window': this.style['on-click-window']
 			};
-			trace('===' + default_style.barwidth);
 			return new StackCollection( index, default_style, this.group, this.style.keys );
 		}
 		
