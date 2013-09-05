@@ -108,6 +108,10 @@ package elements.labels {
 			this.graphics.beginFill( colour, 100 );
 			if(this.style.icon == 'rect') {
 				this.graphics.drawRect( x, y - 3, 12, 6 );
+			}else if(this.style.icon == 'pointline') {
+				this.graphics.drawRect( x-3, y , 4, 2 );
+				this.graphics.drawRect( x+9, y , 4, 2 );
+				this.graphics.drawCircle( x + 5, y + 1, 3);		
 			} else {
 				this.graphics.drawCircle( x + 5, y + 1, 5);				
 			}

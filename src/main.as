@@ -96,7 +96,7 @@ package  {
 				// no data found -- debug mode?
 				try {
 //					var file:String = "./data-files/pie-1.txt";
-					var file:String = "./data-files/stackedbar.txt";
+					var file:String = "./data-files/scatter.txt";
 //					var file:String = "./data-files/stack-bar-1.txt";
 //					var file:String = "./data-files/hstack-bar-keys.txt";
 					this.load_external_file( file );
