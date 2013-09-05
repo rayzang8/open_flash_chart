@@ -96,7 +96,7 @@ package  {
 				// no data found -- debug mode?
 				try {
 //					var file:String = "./data-files/pie-1.txt";
-					var file:String = "./data-files/scatter.txt";
+					var file:String = "./data-files/radar-chart-steps.txt";
 //					var file:String = "./data-files/stack-bar-1.txt";
 //					var file:String = "./data-files/hstack-bar-keys.txt";
 					this.load_external_file( file );
@@ -552,7 +552,8 @@ package  {
 			
 			this.background.resize();
 			this.title.resize();
-			this.keys.resize_top( this.y_legend.get_width(),this.stage.stageWidth, this.title.get_height() );
+			this.keys.resize_top(0,this.stage.stageWidth, this.title.get_height() );
+//			this.keys.resize(0, this.title.get_height() );
 				
 			var top:Number = this.title.get_height() + this.keys.get_height();
 			
