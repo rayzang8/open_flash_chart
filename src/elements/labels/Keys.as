@@ -22,7 +22,7 @@ package elements.labels {
 		public function Keys( stuff:ObjectCollection, json:Object = null )
 		{
 			this.style = {
-				icon:			"rect", //rect    circle
+				icon:			"rect", //rect    circle   linepoint
 				position:        "top",
 				align:			 "center",//left    center   right(default center)
 				padding:         4,
@@ -108,7 +108,7 @@ package elements.labels {
 			this.graphics.beginFill( colour, 100 );
 			if(this.style.icon == 'rect') {
 				this.graphics.drawRect( x, y - 3, 12, 6 );
-			} else {
+			} else {//default
 				this.graphics.drawCircle( x + 5, y + 1, 5);				
 			}
 			this.graphics.endFill();
